@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -15,9 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('usuarios', function () {
         return Inertia::render('Usuario/Index');
     })->name('usuarios');
-    Route::get('productos', function () {
-        return Inertia::render('Productos/Index');
-    })->name('productos');
+    Route::resource('productos', ProductController::class);
     Route::get('subastas', function () {
         return Inertia::render('Subasta/Index');
     })->name('subastas');
