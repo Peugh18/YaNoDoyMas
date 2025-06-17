@@ -1,4 +1,9 @@
+<script setup lang="ts">
+import AppLayout from '@/Layouts/AppLayout.vue';
+</script>
+
 <template>
+  <AppLayout>
   <div class="p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Gestión de Usuarios</h1>
@@ -45,8 +50,6 @@
       </div>
     </div>
   </div>
+</AppLayout>
 </template>
 
-<script setup lang="ts">
-import { Edit, Trash } from 'lucide-vue-next'
-</script> 
