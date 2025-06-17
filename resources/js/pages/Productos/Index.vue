@@ -15,6 +15,7 @@ interface Product {
   created_at: string;
 }
 
+
 const products = ref<Product[]>([
   {
     id: 1,

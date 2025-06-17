@@ -47,6 +47,8 @@ CREATE TABLE products (
     state VARCHAR(50),  -- Estado del producto (Ej. A = nuevo)
     points INT NOT NULL,  -- Puntos MiCoins asociados
     image_url VARCHAR(255),  -- Ruta de la imagen asociada al producto
+    // /pubic/imagen.jpg
+    //  envsite/rutadeimagen;
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

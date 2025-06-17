@@ -16,7 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Usuarios');
     })->name('usuarios');
     Route::get('productos', function () {
-        return Inertia::render('Productos');
+        return Inertia::render('Productos/Index');
     })->name('productos');
     Route::get('subastas', function () {
         return Inertia::render('Subastas');
