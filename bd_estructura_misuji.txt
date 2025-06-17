@@ -1,0 +1,103 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS misuji_store;
+
+-- Usar la base de datos
+USE misuji_store;
+
+-- Crear la tabla de usuarios
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    mi_coins_balance DECIMAL(10, 2) DEFAULT 0, -- Saldo de MiCoins
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+GO
+
+-- Crear la tabla de roles
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    name VARCHAR(255) NOT NULL,  -- 'admin', 'user', etc.
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+GO
+
+-- Tabla intermedia de usuarios y roles
+CREATE TABLE role_user (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+GO
+
+-- Crear la tabla de productos
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,  -- Precio del producto
+    size VARCHAR(100),  -- Medida del producto (Ej. 45 cm)
+    state VARCHAR(50),  -- Estado del producto (Ej. A = nuevo)
+    points INT NOT NULL,  -- Puntos MiCoins asociados
+    image_url VARCHAR(255),  -- Ruta de la imagen asociada al producto
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+GO
+
+-- Crear la tabla de subastas
+CREATE TABLE auctions (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    product_id INT NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
+    highest_bid DECIMAL(10, 2) DEFAULT 0,  -- Puja más alta
+    status VARCHAR(50) DEFAULT 'active',  -- Activa o finalizada
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+GO
+
+-- Crear la tabla de ventas
+CREATE TABLE sales (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,  -- Monto total pagado
+    points_earned INT NOT NULL,  -- Puntos MiCoins ganados
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+GO
+
+-- Crear la tabla de transacciones MiCoins
+CREATE TABLE mi_coins_transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Autoincremento en MySQL
+    user_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,  -- Cantidad de MiCoins ganados o usados
+    transaction_type VARCHAR(50),  -- Tipo de transacción (ej. 'compra', 'subasta', 'descuento')
+    description TEXT,  -- Descripción de la transacción
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+GO
+
+-- Agregar índices a las tablas
+CREATE INDEX idx_user_email ON users (email);
+CREATE INDEX idx_product_name ON products (name);
+CREATE INDEX idx_auction_product_id ON auctions (product_id);
+CREATE INDEX idx_sale_user_id ON sales (user_id);
+CREATE INDEX idx_sale_product_id ON sales (product_id);
+CREATE INDEX idx_mi_coins_user_id ON mi_coins_transactions (user_id);
+GO
