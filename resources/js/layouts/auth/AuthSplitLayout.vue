@@ -4,6 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 
 const page = usePage();
 const name = page.props.name;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const quote = page.props.quote;
 
 defineProps<{
